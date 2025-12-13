@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Embed Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #6441a5 0%, #2a0845 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #9146ff;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #bf94ff;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .input-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: #9146ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #7c37e0;
+        }
+        
+        .player-section {
+            display: none;
+            margin-bottom: 30px;
+        }
+        
+        #twitch-player {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .link-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        #embed-link {
+            flex: 1;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            background-color: #00a8ff;
+        }
+        
+        .copy-btn:hover {
+            background-color: #0097e6;
+        }
+        
+        .info-box {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #bf94ff;
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #twitch-player {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Twitch Embed Generator</h1>
+        <div class="subtitle">Generate embeddable Twitch player links for any channel</div>
+        
+        <div class="input-section">
+            <h2>Enter Twitch Channel Name</h2>
+            <div class="input-group">
+                <input type="text" id="channel-input" placeholder="Enter channel name (e.g., summit1g, shroud)">
+                <button id="load-btn">Load Player</button>
+            </div>
+            <div class="example">Example: Enter "summit1g" for https://www.twitch.tv/summit1g</div>
+        </div>
+        
+        <div class="player-section" id="player-section">
+            <h2>Twitch Player</h2>
+            <div id="twitch-player"></div>
+        </div>
+        
+        <div class="link-section" id="link-section">
+            <h2>Embed Link</h2>
+            <p>Use this link to embed the player or redirect bots:</p>
+            <div class="link-container">
+                <input type="text" id="embed-link" readonly>
+                <button class="copy-btn" id="copy-btn">Copy</button>
+            </div>
+            <div class="info-box">
+                <strong>How to use:</strong> Append <code>?channel=CHANNEL_NAME</code> to this page's URL. 
+                Example: <code>https://your-username.github.io/repo-name/?channel=summit1g</code>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://player.twitch.tv/js/embed/v1.js"></script>
+    <script>
+        // Get channel from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let channel = urlParams.get('channel');
+        
+        // DOM Elements
+        const channelInput = document.getElementById('channel-input');
+        const loadBtn = document.getElementById('load-btn');
+        const playerSection = document.getElementById('player-section');
+        const embedLink = document.getElementById('embed-link');
+        const copyBtn = document.getElementById('copy-btn');
+        const linkSection = document.getElementById('link-section');
+        
+        // If channel is provided in URL, load it automatically
+        if (channel) {
+            channelInput.value = channel;
+            loadPlayer(channel);
+        }
+        
+        // Load player button click
+        loadBtn.addEventListener('click', () => {
+            const inputChannel = channelInput.value.trim();
+            if (inputChannel) {
+                // Update URL without reloading the page
+                const newUrl = `${window.location.pathname}?channel=${encodeURIComponent(inputChannel)}`;
+                window.history.pushState({}, '', newUrl);
+                loadPlayer(inputChannel);
+            } else {
+                alert('Please enter a channel name');
+            }
+        });
+        
+        // Load Twitch player
+        function loadPlayer(channelName) {
+            // Clear previous player
+            const playerDiv = document.getElementById('twitch-player');
+            playerDiv.innerHTML = '';
+            
+            // Create new player
+            const player = new Twitch.Player("twitch-player", {
+                width: "100%",
+                height: "100%",
+                channel: channelName,
+                parent: [window.location.hostname],
+                autoplay: true
+            });
+            
+            // Generate embed link
+            const currentUrl = window.location.origin + window.location.pathname;
+            const embedUrl = `${currentUrl}?channel=${encodeURIComponent(channelName)}`;
+            embedLink.value = embedUrl;
+            
+            // Show player and link sections
+            playerSection.style.display = 'block';
+            linkSection.style.display = 'block';
+        }
+        
+        // Copy embed link to clipboard
+        copyBtn.addEventListener('click', () => {
+            embedLink.select();
+            embedLink.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    copyBtn.style.backgroundColor = '#28a745';
+                    
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.backgroundColor = '';
+                    }, 2000);
+                }
+            } catch (err) {
+                // Fallback for newer clipboard API
+                navigator.clipboard.writeText(embedLink.value).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    copyBtn.style.backgroundColor = '#28a745';
+                    
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.backgroundColor = '';
+                    }, 2000);
+                });
+            }
+        });
+        
+        // Allow pressing Enter in the input field
+        channelInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
