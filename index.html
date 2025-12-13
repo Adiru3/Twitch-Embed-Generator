@@ -291,6 +291,25 @@
     </style>
 </head>
 <body>
+
+    <div class="player-section" id="player-section">
+        <h2>Twitch Player</h2>
+        <div id="twitch-player"></div>
+    </div>
+    
+    <div class="link-section" id="link-section">
+        <h2>Embed Link</h2>
+        <p>Use this link to embed the player or redirect bots:</p>
+        <div class="link-container">
+            <input type="text" id="embed-link" readonly>
+            <button class="copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <div class="info-box">
+            <strong>How to use:</strong> Append <code>?channel=CHANNEL_NAME</code> to this page's URL. 
+            Example: <code>https://your-username.github.io/repo-name/?channel=summit1g</code>
+        </div>
+    </div>
+
     <div class="container">
         <h1>Twitch Embed Generator</h1>
         <div class="subtitle">Generate embeddable Twitch player links for any channel</div>
@@ -349,23 +368,6 @@
             </div>
         </div>
         
-        <div class="player-section" id="player-section">
-            <h2>Twitch Player</h2>
-            <div id="twitch-player"></div>
-        </div>
-        
-        <div class="link-section" id="link-section">
-            <h2>Embed Link</h2>
-            <p>Use this link to embed the player or redirect bots:</p>
-            <div class="link-container">
-                <input type="text" id="embed-link" readonly>
-                <button class="copy-btn" id="copy-btn">Copy</button>
-            </div>
-            <div class="info-box">
-                <strong>How to use:</strong> Append <code>?channel=CHANNEL_NAME</code> to this page's URL. 
-                Example: <code>https://your-username.github.io/repo-name/?channel=summit1g</code>
-            </div>
-        </div>
         
         <!-- Добавленные ссылки -->
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
