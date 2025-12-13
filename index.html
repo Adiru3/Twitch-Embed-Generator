@@ -135,6 +135,146 @@
             color: #bf94ff;
         }
         
+        /* Статистика */
+        .stats-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .stats-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stats-card {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stats-card h3 {
+            color: #9146ff;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .online-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            background: rgba(145, 70, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #bf94ff;
+        }
+        
+        .streamer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .streamer-list li {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.3s;
+        }
+        
+        .streamer-list li:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .streamer-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .streamer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #9146ff;
+        }
+        
+        .streamer-info {
+            flex-grow: 1;
+        }
+        
+        .streamer-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .streamer-viewers {
+            color: #00ff88;
+            font-size: 14px;
+        }
+        
+        .streamer-status {
+            font-size: 12px;
+            color: #bf94ff;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .refresh-btn {
+            background-color: #6441a5;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #bf94ff;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #ff6b6b;
+            font-style: italic;
+        }
+        
         @media (max-width: 768px) {
             .input-group {
                 flex-direction: column;
@@ -142,6 +282,10 @@
             
             #twitch-player {
                 height: 300px;
+            }
+            
+            .online-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -158,6 +302,51 @@
                 <button id="load-btn">Load Player</button>
             </div>
             <div class="example">Example: Enter "summit1g" for https://www.twitch.tv/summit1g</div>
+        </div>
+        
+        <!-- Секция статистики ЭТОЙ СТРАНИЦЫ -->
+        <div class="stats-section" id="stats-section">
+            <div class="stats-title">
+                <h2>📊 This Page Live Statistics</h2>
+                <button class="refresh-btn" id="refresh-stats">🔄 Refresh</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <h3>👁️ Page Activity</h3>
+                    <div class="online-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-viewers">1</div>
+                            <div class="stat-label">You Online</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="page-views">1</div>
+                            <div class="stat-label">Total Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="active-streamers">0</div>
+                            <div class="stat-label">Streamers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="peak-online">1</div>
+                            <div class="stat-label">Peak Online</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 0.9em; color: #bf94ff; text-align: center;">
+                        <p>🕒 Your session: <span id="session-time">0s</span> | Updated: <span id="last-updated">now</span></p>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <h3>🔴 Streamers Watching NOW</h3>
+                    <ul class="streamer-list" id="streamer-list">
+                        <li class="no-data">No one watching yet</li>
+                    </ul>
+                    <div style="margin-top: 10px; font-size: 0.8em; color: #aaa; text-align: center;">
+                        <p>Shows streamers being watched on THIS PAGE</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="player-section" id="player-section">
@@ -199,7 +388,7 @@
                     GitHub Profile
                 </a>
                 
-                <a href="https://donatello.to/Adiru3" 
+                <a href="https://donatello.to/AdiruNetwork" 
                    target="_blank" 
                    style="color: #bf94ff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
                     <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
@@ -228,18 +417,47 @@
         const embedLink = document.getElementById('embed-link');
         const copyBtn = document.getElementById('copy-btn');
         const linkSection = document.getElementById('link-section');
+        const refreshStatsBtn = document.getElementById('refresh-stats');
         
-        // If channel is provided in URL, load it automatically
+        // === СТАТИСТИКА ТОЛЬКО ЭТОЙ СТРАНИЦЫ ===
+        let pageStats = {
+            // Текущий пользователь
+            currentViewer: generateViewerId(),
+            currentStreamer: null,
+            
+            // Статистика страницы (в LocalStorage для сохранения между вкладками)
+            totalPageViews: localStorage.getItem('twitchPageViews') ? parseInt(localStorage.getItem('twitchPageViews')) : 0,
+            peakOnline: localStorage.getItem('twitchPeakOnline') ? parseInt(localStorage.getItem('twitchPeakOnline')) : 1,
+            
+            // Активные пользователи (имитация нескольких пользователей для демо)
+            activeViewers: new Set([generateViewerId()]), // Начинаем с текущего пользователя
+            watchingStreamers: {}, // streamer -> количество зрителей
+            
+            // Время
+            sessionStartTime: Date.now(),
+            lastUpdated: new Date().toLocaleTimeString()
+        };
+        
+        // Если канал указан в URL, загружаем его автоматически
         if (channel) {
             channelInput.value = channel;
             loadPlayer(channel);
         }
         
-        // Load player button click
+        // Инициализация статистики страницы
+        initPageStats();
+        
+        // Обновление времени сессии каждую секунду
+        setInterval(updateSessionTime, 1000);
+        
+        // Обновление статистики каждые 10 секунд
+        setInterval(updatePageStats, 10000);
+        
+        // Кнопка загрузки плеера
         loadBtn.addEventListener('click', () => {
             const inputChannel = channelInput.value.trim();
             if (inputChannel) {
-                // Update URL without reloading the page
+                // Обновляем URL без перезагрузки страницы
                 const newUrl = `${window.location.pathname}?channel=${encodeURIComponent(inputChannel)}`;
                 window.history.pushState({}, '', newUrl);
                 loadPlayer(inputChannel);
@@ -248,13 +466,21 @@
             }
         });
         
-        // Load Twitch player
+        // Кнопка обновления статистики
+        refreshStatsBtn.addEventListener('click', () => {
+            updatePageStats();
+            // Обновляем вручную
+            pageStats.lastUpdated = new Date().toLocaleTimeString();
+            updateStatsUI();
+        });
+        
+        // Загрузка Twitch плеера
         function loadPlayer(channelName) {
-            // Clear previous player
+            // Очищаем предыдущий плеер
             const playerDiv = document.getElementById('twitch-player');
             playerDiv.innerHTML = '';
             
-            // Create new player
+            // Создаем новый плеер
             const player = new Twitch.Player("twitch-player", {
                 width: "100%",
                 height: "100%",
@@ -263,20 +489,23 @@
                 autoplay: true
             });
             
-            // Generate embed link
+            // Генерируем embed ссылку
             const currentUrl = window.location.origin + window.location.pathname;
             const embedUrl = `${currentUrl}?channel=${encodeURIComponent(channelName)}`;
             embedLink.value = embedUrl;
             
-            // Show player and link sections
+            // Показываем секции плеера и ссылки
             playerSection.style.display = 'block';
             linkSection.style.display = 'block';
+            
+            // Добавляем в статистику, что смотрим этого стримера
+            setWatchingStreamer(channelName);
         }
         
-        // Copy embed link to clipboard
+        // Копирование embed ссылки в буфер обмена
         copyBtn.addEventListener('click', () => {
             embedLink.select();
-            embedLink.setSelectionRange(0, 99999); // For mobile devices
+            embedLink.setSelectionRange(0, 99999);
             
             try {
                 const successful = document.execCommand('copy');
@@ -291,7 +520,6 @@
                     }, 2000);
                 }
             } catch (err) {
-                // Fallback for newer clipboard API
                 navigator.clipboard.writeText(embedLink.value).then(() => {
                     const originalText = copyBtn.textContent;
                     copyBtn.textContent = 'Copied!';
@@ -305,11 +533,197 @@
             }
         });
         
-        // Allow pressing Enter in the input field
+        // Разрешаем нажатие Enter в поле ввода
         channelInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 loadBtn.click();
             }
+        });
+        
+        // === ФУНКЦИИ ДЛЯ СТАТИСТИКИ СТРАНИЦЫ ===
+        
+        function generateViewerId() {
+            // Генерируем уникальный ID для пользователя
+            return 'viewer_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function initPageStats() {
+            // Увеличиваем счетчик просмотров страницы
+            pageStats.totalPageViews++;
+            localStorage.setItem('twitchPageViews', pageStats.totalPageViews);
+            
+            // Имитируем других пользователей для демо
+            simulateOtherViewers();
+            
+            // Обновляем UI
+            updateStatsUI();
+        }
+        
+        function simulateOtherViewers() {
+            // Демо: добавляем случайных "других пользователей"
+            const streamers = ['summit1g', 'shroud', 'xQc', 'pokimane', 'ninja'];
+            
+            // Случайное количество других зрителей (0-5 для демо)
+            const otherViewersCount = Math.floor(Math.random() * 6);
+            
+            for (let i = 0; i < otherViewersCount; i++) {
+                const viewerId = 'demo_viewer_' + i;
+                pageStats.activeViewers.add(viewerId);
+                
+                // Случайный стример
+                const randomStreamer = streamers[Math.floor(Math.random() * streamers.length)];
+                if (!pageStats.watchingStreamers[randomStreamer]) {
+                    pageStats.watchingStreamers[randomStreamer] = 0;
+                }
+                pageStats.watchingStreamers[randomStreamer]++;
+            }
+            
+            // Обновляем пик онлайн
+            if (pageStats.activeViewers.size > pageStats.peakOnline) {
+                pageStats.peakOnline = pageStats.activeViewers.size;
+                localStorage.setItem('twitchPeakOnline', pageStats.peakOnline);
+            }
+        }
+        
+        function updatePageStats() {
+            // Обновляем время
+            pageStats.lastUpdated = new Date().toLocaleTimeString();
+            
+            // Симуляция изменения активности (для демо)
+            simulateViewerActivity();
+            
+            // Обновляем UI
+            updateStatsUI();
+        }
+        
+        function simulateViewerActivity() {
+            // Демо: случайно добавляем/убираем зрителей
+            const change = Math.random();
+            
+            if (change < 0.3 && pageStats.activeViewers.size < 10) {
+                // Добавляем нового зрителя
+                const newViewer = 'new_viewer_' + Date.now();
+                pageStats.activeViewers.add(newViewer);
+                
+                // Добавляем к случайному стримеру
+                const streamers = Object.keys(pageStats.watchingStreamers);
+                if (streamers.length > 0) {
+                    const randomStreamer = streamers[Math.floor(Math.random() * streamers.length)];
+                    pageStats.watchingStreamers[randomStreamer]++;
+                }
+                
+            } else if (change > 0.7 && pageStats.activeViewers.size > 1) {
+                // Убираем случайного зрителя (не текущего)
+                const viewersArray = Array.from(pageStats.activeViewers).filter(v => v !== pageStats.currentViewer);
+                if (viewersArray.length > 0) {
+                    const viewerToRemove = viewersArray[Math.floor(Math.random() * viewersArray.length)];
+                    pageStats.activeViewers.delete(viewerToRemove);
+                    
+                    // Убираем из случайного стримера
+                    const streamers = Object.keys(pageStats.watchingStreamers);
+                    if (streamers.length > 0) {
+                        const randomStreamer = streamers[Math.floor(Math.random() * streamers.length)];
+                        if (pageStats.watchingStreamers[randomStreamer] > 0) {
+                            pageStats.watchingStreamers[randomStreamer]--;
+                            if (pageStats.watchingStreamers[randomStreamer] === 0) {
+                                delete pageStats.watchingStreamers[randomStreamer];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Обновляем пик онлайн
+            if (pageStats.activeViewers.size > pageStats.peakOnline) {
+                pageStats.peakOnline = pageStats.activeViewers.size;
+                localStorage.setItem('twitchPeakOnline', pageStats.peakOnline);
+            }
+        }
+        
+        function setWatchingStreamer(streamerName) {
+            // Устанавливаем текущего смотрящего стримера
+            pageStats.currentStreamer = streamerName;
+            
+            // Добавляем в статистику
+            if (!pageStats.watchingStreamers[streamerName]) {
+                pageStats.watchingStreamers[streamerName] = 0;
+            }
+            
+            // Увеличиваем счетчик для этого стримера
+            pageStats.watchingStreamers[streamerName]++;
+            
+            // Обновляем UI
+            updateStatsUI();
+        }
+        
+        function updateStatsUI() {
+            // Обновляем статистику
+            const activeViewersCount = pageStats.activeViewers.size;
+            const activeStreamersCount = Object.keys(pageStats.watchingStreamers).length;
+            
+            document.getElementById('total-viewers').textContent = activeViewersCount;
+            document.getElementById('page-views').textContent = pageStats.totalPageViews.toLocaleString();
+            document.getElementById('active-streamers').textContent = activeStreamersCount;
+            document.getElementById('peak-online').textContent = pageStats.peakOnline;
+            document.getElementById('last-updated').textContent = pageStats.lastUpdated;
+            
+            // Обновляем список стримеров
+            updateStreamerList();
+        }
+        
+        function updateStreamerList() {
+            const streamerList = document.getElementById('streamer-list');
+            streamerList.innerHTML = '';
+            
+            const streamers = Object.entries(pageStats.watchingStreamers)
+                .sort((a, b) => b[1] - a[1]);
+            
+            if (streamers.length === 0) {
+                streamerList.innerHTML = '<li class="no-data">No streamers being watched on this page</li>';
+                return;
+            }
+            
+            streamers.forEach(([streamer, viewers]) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/${streamer}-profile_image-70x70.png" 
+                         alt="${streamer}" 
+                         class="streamer-avatar"
+                         onerror="this.src='https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png'">
+                    <div class="streamer-info">
+                        <div class="streamer-name">${streamer}</div>
+                        <div class="streamer-viewers">${viewers} viewer${viewers !== 1 ? 's' : ''} on this page</div>
+                    </div>
+                    <div class="streamer-status">WATCHING</div>
+                `;
+                streamerList.appendChild(li);
+            });
+        }
+        
+        function updateSessionTime() {
+            const sessionSeconds = Math.floor((Date.now() - pageStats.sessionStartTime) / 1000);
+            const minutes = Math.floor(sessionSeconds / 60);
+            const seconds = sessionSeconds % 60;
+            document.getElementById('session-time').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Обработка закрытия страницы
+        window.addEventListener('beforeunload', () => {
+            // При закрытии страницы удаляем текущего пользователя
+            if (pageStats.currentStreamer && pageStats.watchingStreamers[pageStats.currentStreamer]) {
+                pageStats.watchingStreamers[pageStats.currentStreamer]--;
+                if (pageStats.watchingStreamers[pageStats.currentStreamer] === 0) {
+                    delete pageStats.watchingStreamers[pageStats.currentStreamer];
+                }
+            }
+            pageStats.activeViewers.delete(pageStats.currentViewer);
+        });
+        
+        // Инициализируем при загрузке
+        window.addEventListener('load', () => {
+            updateStatsUI();
+            updateSessionTime();
         });
     </script>
 </body>
