@@ -9,7 +9,7 @@
 
 ## ✨ Live Demo & Quick Start
 
-**Live Demo**: (https://adiru3.github.io/Twitch-Embed-Generator/)
+**Live Demo**: https://adiru3.github.io/Twitch-Embed-Generator/
 
 **One-Click Test** (replace `CHANNEL_NAME`):
 
